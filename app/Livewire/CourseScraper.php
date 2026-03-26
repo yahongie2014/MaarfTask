@@ -14,13 +14,22 @@ class CourseScraper extends Component
 {
     use WithPagination;
 
-    public $categoryInput = "Marketing\nProgramming\nGraphic Design\nBusiness\nEngineering";
+    public $categoryInput = "";
     public $activeCategoryId = null;
 
-    public function fetchCourses(YouTubeService $service, CategoryRepositoryInterface $categoryRepo, CourseRepositoryInterface $courseRepo)
+    public function mount()
+    {
+        $this->categoryInput = __("Marketing") . "\n" . 
+                             __("Programming") . "\n" . 
+                             __("Graphic Design") . "\n" . 
+                             __("Business") . "\n" . 
+                             __("Engineering");
+    }
+
+    public function fetchCourses(YouTubeService $service, \App\Services\AIService $aiService, CategoryRepositoryInterface $categoryRepo, CourseRepositoryInterface $courseRepo)
     {
         $categories = collect(explode("\n", $this->categoryInput))
-            ->map(fn($cat) => trim($cat))
+            ->map(fn($cat) => (string) trim($cat))
             ->filter();
 
         foreach ($categories as $catName) {
@@ -29,20 +38,26 @@ class CourseScraper extends Component
                 $category = $categoryRepo->create(['name' => $catName]);
             }
 
-            $results = $service->searchCourses($catName);
+            // AI Integration: Generate 10-20 specific titles
+            $titles = $aiService->generateTitles($catName);
 
-            foreach ($results as $data) {
-                if (!$courseRepo->exists($data['youtube_id'])) {
-                    $courseRepo->create([
-                        'category_id' => $category->id,
-                        'title' => $data['title'],
-                        'author' => $data['author'],
-                        'thumbnail' => $data['thumbnail'],
-                        'youtube_id' => $data['youtube_id'],
-                        'description' => $data['description'],
-                        'duration' => $data['duration'],
-                        'views' => $data['views'],
-                    ]);
+            foreach ($titles as $title) {
+                // YouTube Search: Get 2 playlists per title
+                $results = $service->searchCourses($title, 2);
+
+                foreach ($results as $data) {
+                    if (!$courseRepo->exists($data['youtube_id'])) {
+                        $courseRepo->create([
+                            'category_id' => $category->id,
+                            'title' => $data['title'],
+                            'author' => $data['author'],
+                            'thumbnail' => $data['thumbnail'],
+                            'youtube_id' => $data['youtube_id'],
+                            'description' => $data['description'],
+                            'duration' => $data['duration'],
+                            'views' => $data['views'],
+                        ]);
+                    }
                 }
             }
         }

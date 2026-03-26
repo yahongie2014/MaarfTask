@@ -16,22 +16,19 @@ class YouTubeService
         $this->apiKey = config('services.youtube.key');
     }
 
-    public function searchCourses(string $category): array
+    public function searchCourses(string $searchTerm, int $limit = 12): array
     {
-        // Simulate AI search queries
-        $query = "Best educational " . $category . " courses playlists";
-        
         if (empty($this->apiKey)) {
-            return $this->getMockResults($category);
+            return $this->getMockResults($searchTerm, $limit);
         }
 
         try {
             $response = $this->client->get('search', [
                 'query' => [
                     'part' => 'snippet',
-                    'q' => $query,
+                    'q' => $searchTerm,
                     'type' => 'playlist',
-                    'maxResults' => 12,
+                    'maxResults' => $limit,
                     'key' => $this->apiKey,
                 ]
             ]);
@@ -47,28 +44,34 @@ class YouTubeService
                     'thumbnail' => $item['snippet']['thumbnails']['medium']['url'],
                     'youtube_id' => $item['id']['playlistId'],
                     'description' => $item['snippet']['description'],
-                    'duration' => rand(5, 50) . ' hours', // Playlists duration is hard to get in one call
+                    'duration' => rand(5, 50) . ' hours',
                     'views' => number_format(rand(10000, 500000)) . ' views',
                 ];
             }
 
             return $courses;
         } catch (\Exception $e) {
-            Log::error('YouTube Search Failed: ' . $e->getMessage());
-            return $this->getMockResults($category);
+            \Illuminate\Support\Facades\Log::error('YouTube Search Failed: ' . $e->getMessage());
+            return $this->getMockResults($searchTerm, $limit);
         }
     }
 
-    private function getMockResults(string $category): array
+    private function getMockResults(string $searchTerm, int $limit = 8): array
     {
         $courses = [];
-        for ($i = 1; $i <= 8; $i++) {
+        $isArabic = preg_match('/\p{Arabic}/u', $searchTerm);
+
+        for ($i = 1; $i <= $limit; $i++) {
+            $title = $isArabic 
+                ? "دورة $searchTerm كاملة #$i - تعلم باحترافية"
+                : "Complete $searchTerm Masterclass #$i";
+
             $courses[] = [
-                'title' => "Complete $category Course #$i - From Beginner to Pro",
+                'title' => $title,
                 'author' => "EduChannel $i",
-                'thumbnail' => "https://picsum.photos/seed/" . md5($category . $i) . "/480/360",
+                'thumbnail' => "https://picsum.photos/seed/" . md5($searchTerm . $i) . "/480/360",
                 'youtube_id' => bin2hex(random_bytes(6)),
-                'description' => "This is a comprehensive course about $category including all the basics...",
+                'description' => "This is a comprehensive course about $searchTerm including all the basics...",
                 'duration' => rand(2, 20) . ' hours',
                 'views' => number_format(rand(1000, 1000000)) . ' views',
             ];

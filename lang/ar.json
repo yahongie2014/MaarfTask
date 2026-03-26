@@ -1,0 +1,19 @@
+{
+    "System Active": "النظام نشط",
+    "YouTube Course Scraper": "جامع دورات يوتيوب",
+    "Collect Educational Courses from YouTube": "جمع الدورات التعليمية من يوتيوب",
+    "Enter categories, and the system will search and fetch top educational courses automatically.": "أدخل التصنيفات، وسيقوم النظام بالبحث وجلب أهم الدورات التعليمية تلقائياً.",
+    "Start Fetching": "ابدأ الجمع",
+    "Stop": "إيقاف",
+    "Enter categories (one per line):": "أدخل التصنيفات لكل تصنيف في سطر جديد:",
+    "Discovered Courses": "الدورات المكتشفة",
+    "Found :count courses": "تم العثور على :count دورة",
+    "All": "الكل",
+    "Course": "دورة",
+    "Searching...": "جاري البحث...",
+    "Marketing": "التسويق",
+    "Programming": "البرمجة",
+    "Graphic Design": "التصميم الجرافيكي",
+    "Business": "إدارة الأعمال",
+    "Engineering": "الهندسة"
+}

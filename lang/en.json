@@ -1,0 +1,19 @@
+{
+    "System Active": "System Active",
+    "YouTube Course Scraper": "YouTube Course Scraper",
+    "Collect Educational Courses from YouTube": "Collect Educational Courses from YouTube",
+    "Enter categories, and the system will search and fetch top educational courses automatically.": "Enter categories, and the system will search and fetch top educational courses automatically.",
+    "Start Fetching": "Start Fetching",
+    "Stop": "Stop",
+    "Enter categories (one per line):": "Enter categories (one per line):",
+    "Discovered Courses": "Discovered Courses",
+    "Found :count courses": "Found :count courses",
+    "All": "All",
+    "Course": "Course",
+    "Searching...": "Searching...",
+    "Marketing": "Marketing",
+    "Programming": "Programming",
+    "Graphic Design": "Graphic Design",
+    "Business": "Business",
+    "Engineering": "Engineering"
+}

@@ -19,6 +19,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        if (request()->has('lang')) {
+            $lang = request()->get('lang');
+            if (in_array($lang, ['en', 'ar'])) {
+                session(['locale' => $lang]);
+            }
+        }
+        
+        app()->setLocale(session('locale', config('app.locale')));
     }
 }
