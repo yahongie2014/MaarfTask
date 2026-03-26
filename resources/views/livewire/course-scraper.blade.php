@@ -57,6 +57,15 @@
                 @endforeach
             </div>
 
+            <div class="relative max-w-md">
+                <input wire:model.live.debounce.300ms="search" type="text" placeholder="{{ __('Search courses by title...') }}" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:ring-2 focus:ring-red-500 focus:border-transparent transition">
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none rtl:left-0 rtl:right-auto rtl:pl-3">
+                    <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($courses as $course)
                     <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-red-500/50 transition-all duration-300 group">
@@ -88,8 +97,8 @@
                 @endforeach
             </div>
 
-            <div class="mt-12">
-                {{ $courses->links() }}
+            <div class="mt-12 flex justify-center">
+                {{ $courses->links('livewire.custom-pagination') }}
             </div>
         </div>
     </main>

@@ -8,12 +8,16 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class CourseRepository implements CourseRepositoryInterface
 {
-    public function paginate(int $perPage = 10, int $categoryId = null): LengthAwarePaginator
+    public function paginate(int $perPage = 10, int $categoryId = null, string $search = null): LengthAwarePaginator
     {
         $query = Course::with('category');
 
         if ($categoryId) {
             $query->where('category_id', $categoryId);
+        }
+
+        if ($search) {
+            $query->where('title', 'like', '%' . $search . '%');
         }
 
         return $query->latest()->paginate($perPage);

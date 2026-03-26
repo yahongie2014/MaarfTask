@@ -14,8 +14,16 @@ class CourseScraper extends Component
 {
     use WithPagination;
 
+    public $search = "";
     public $categoryInput = "";
     public $activeCategoryId = null;
+
+    protected $queryString = ['search'];
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
 
     public function mount()
     {
@@ -33,13 +41,13 @@ class CourseScraper extends Component
             ->filter();
 
         foreach ($categories as $catName) {
-            $category = $categoryRepo->findByName($catName);
+            $category = $categoryRepo->findByName((string)$catName);
             if (!$category) {
-                $category = $categoryRepo->create(['name' => $catName]);
+                $category = $categoryRepo->create(['name' => (string)$catName]);
             }
 
             // AI Integration: Generate 10-20 specific titles
-            $titles = $aiService->generateTitles($catName);
+            $titles = $aiService->generateTitles((string)$catName);
 
             foreach ($titles as $title) {
                 // YouTube Search: Get 2 playlists per title
@@ -75,7 +83,7 @@ class CourseScraper extends Component
     {
         return view('livewire.course-scraper', [
             'categories' => $categoryRepo->all(),
-            'courses' => $courseRepo->paginate(12, $this->activeCategoryId),
+            'courses' => $courseRepo->paginate(12, $this->activeCategoryId, $this->search),
             'totalCourses' => Course::count(),
             'courseRepo' => $courseRepo,
         ]);
