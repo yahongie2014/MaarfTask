@@ -17,8 +17,7 @@ require __DIR__.'/vendor/autoload.php';
 /** @var Application $app */
 $app = require_once __DIR__.'/bootstrap/app.php';
 
-// Override the public path to __DIR__ so Vite knows the manifest is in the root build directory, 
-// assuming you moved the contents of the public directory to the root of public_html.
-$app->usePublicPath(__DIR__);
+// Let Laravel know your public folder is the 'public' directory
+$app->usePublicPath(__DIR__.'/public');
 
 $app->handleRequest(Request::capture());
